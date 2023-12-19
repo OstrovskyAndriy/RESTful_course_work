@@ -23,11 +23,11 @@ public class PhotoServiceImpl implements PhotoService {
         return photoRepository.findAll();
     }
 
-    @Override
-    public List<Photo> getPhotosByInstitution(Long id) {
-        //дописати
-        return photoRepository.findByInstitutionId(id);
-    }
+//    @Override
+//    public List<Photo> getPhotosByInstitution(Long id) {
+//        //дописати
+//        return photoRepository.findGalleryByInstitutionId(id);
+//    }
 
     @Override
     public Photo updatePhoto(Photo photo, Long id) {

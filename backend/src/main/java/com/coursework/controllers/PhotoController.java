@@ -24,10 +24,10 @@ public class PhotoController {
 
     }
 
-    @GetMapping("/institution/{id}")
-    public List<Photo> getPhotosByInstitution(@PathVariable Long id) {
-        return photoService.getPhotosByInstitution(id);
-    }
+//    @GetMapping("/institution/{id}")
+//    public List<Photo> getPhotosByInstitution(@PathVariable Long id) {
+//        return photoService.getPhotosByInstitution(id);
+//    }
 
     @GetMapping("/{id}")
     public Photo getPhotoById(@PathVariable Long id) {

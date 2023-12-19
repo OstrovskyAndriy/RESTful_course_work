@@ -7,7 +7,7 @@ import java.util.List;
 public interface PhotoService {
     List<Photo> getAllPhotos();
 
-    List<Photo> getPhotosByInstitution(Long id);
+//    List<Photo> getPhotosByInstitution(Long id);
 
     Photo updatePhoto(Photo photo, Long id);
 
