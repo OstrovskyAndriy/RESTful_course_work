@@ -15,12 +15,9 @@ public class Photo {
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "gallery_id",nullable = false)
-    private Gallery gallery;
+    @JoinColumn(name = "institution_id", nullable = false)
+    private Institution institution;
 
     @Column(name = "url", nullable = false)
     private String url;
-
-
-
 }

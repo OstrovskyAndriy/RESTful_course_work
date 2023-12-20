@@ -6,17 +6,17 @@ import lombok.Setter;
 
 @Entity
 @Getter @Setter
-@Table(name = "tables")
+@Table(name = "institution_tables")
 public class InstitutionTables {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
 
-    @Column(name = "tableNumber", unique = true)
+    @Column(name = "table_number", unique = true)
     private int tableNumber;
 
-    @Column(name = "countOfChairs", nullable = false)
+    @Column(name = "count_of_chairs", nullable = false)
     private int countOfChairs;
 
     @ManyToOne

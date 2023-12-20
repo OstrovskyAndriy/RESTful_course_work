@@ -8,7 +8,8 @@ import lombok.Setter;
 import java.util.List;
 
 @Entity
-@Getter @Setter
+@Getter
+@Setter
 @Table(name = "institutions")
 public class Institution {
     @Id
@@ -20,7 +21,11 @@ public class Institution {
     private String name;
 
     @Column(name = "type")
+    @Enumerated(EnumType.STRING)
     private InstitutionType type;
+//    @Column(name = "type")
+//    private String type;
+
 
     @Column(name = "address")
     private String address;
@@ -38,6 +43,5 @@ public class Institution {
     private List<InstitutionTables> tables;
 
     @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
-    private List<Gallery> photos;
+    private List<Photo> photos;
 }
-
