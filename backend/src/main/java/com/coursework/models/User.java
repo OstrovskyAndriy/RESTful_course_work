@@ -1,7 +1,6 @@
 package com.coursework.models;
 
 import com.coursework.enums.InstitutionType;
-import com.coursework.enums.UserStatus;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,8 +27,7 @@ public class User {
     @Column(name = "phone", nullable = false, unique = true)
     private String phone;
 
-    @Column(name = "status")
-    @Enumerated(EnumType.STRING)
-    private UserStatus status;
+    @Column(name = "status_id")
+    private int status;
 
 }

@@ -37,7 +37,7 @@ public class InstitutionServiceImpl implements InstitutionService {
     @Override
     public Institution updateInstitution(Long id, Institution institution) {
         if (institutionRepository.existsById(id)) {
-            institution.setId(id);
+            //institution.setId(id);
             return institutionRepository.save(institution);
         }
         return null;

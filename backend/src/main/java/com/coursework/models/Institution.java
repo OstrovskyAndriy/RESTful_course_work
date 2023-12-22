@@ -20,12 +20,8 @@ public class Institution {
     @Column(name = "name")
     private String name;
 
-    @Column(name = "type")
-    @Enumerated(EnumType.STRING)
-    private InstitutionType type;
-//    @Column(name = "type")
-//    private String type;
-
+    @Column(name = "type_id")  // Змінено назву стовпця на type_id
+    private int typeId;  // Змінено тип на int
 
     @Column(name = "address")
     private String address;
