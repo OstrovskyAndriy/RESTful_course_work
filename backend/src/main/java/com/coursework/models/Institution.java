@@ -21,7 +21,8 @@ public class Institution {
     private String name;
 
     @Column(name = "type_id")  // Змінено назву стовпця на type_id
-    private int typeId;  // Змінено тип на int
+    //@Enumerated(EnumType.ORDINAL)
+    private int type;  // Змінено тип на InstitutionType
 
     @Column(name = "address")
     private String address;
@@ -35,9 +36,10 @@ public class Institution {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<InstitutionTables> tables;
 
-    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL)
+
+    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Photo> photos;
 }

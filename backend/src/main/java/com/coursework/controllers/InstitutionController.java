@@ -1,7 +1,9 @@
 package com.coursework.controllers;
 
 import com.coursework.models.Institution;
+import com.coursework.repository.InstitutionRepository;
 import com.coursework.services.InstitutionService;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -12,16 +14,23 @@ import java.util.List;
 public class InstitutionController {
 
     private final InstitutionService institutionService;
+    private final InstitutionRepository institutionRepository;  // Додайте це поле
 
     @Autowired
-    public InstitutionController(InstitutionService institutionService) {
+    public InstitutionController(InstitutionService institutionService, InstitutionRepository institutionRepository) {
         this.institutionService = institutionService;
+        this.institutionRepository = institutionRepository;  // Ініціалізуйте його тут
     }
 
+    @Transactional
     @GetMapping
     public List<Institution> getAllInstitutions() {
-        return institutionService.getAllInstitutions();
+        List<Institution> institutions = institutionRepository.findAll();
+        institutions.forEach(institution -> institution.getTables().size());
+        return institutions;
     }
+
+
 
     @GetMapping("/{id}")
     public Institution getInstitutionById(@PathVariable Long id) {
