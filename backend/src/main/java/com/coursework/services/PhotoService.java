@@ -16,4 +16,5 @@ public interface PhotoService {
     Photo getPhotoById(Long id);
 
     void deletePhoto(Long id);
+    public List<Photo> getPhotosByInstitution(Long institutionId);
 }

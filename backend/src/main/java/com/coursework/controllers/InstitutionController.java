@@ -3,6 +3,7 @@ package com.coursework.controllers;
 import com.coursework.models.Institution;
 import com.coursework.repository.InstitutionRepository;
 import com.coursework.services.InstitutionService;
+import com.coursework.services.PhotoService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -15,21 +16,25 @@ public class InstitutionController {
 
     private final InstitutionService institutionService;
     private final InstitutionRepository institutionRepository;  // Додайте це поле
+    private PhotoService photoService;
 
     @Autowired
-    public InstitutionController(InstitutionService institutionService, InstitutionRepository institutionRepository) {
+    public InstitutionController(InstitutionService institutionService, InstitutionRepository institutionRepository, PhotoService photoService) {
         this.institutionService = institutionService;
-        this.institutionRepository = institutionRepository;  // Ініціалізуйте його тут
+        this.institutionRepository = institutionRepository;
+        this.photoService = photoService;  // Ініціалізуйте це поле
     }
 
-    @Transactional
     @GetMapping
-    public List<Institution> getAllInstitutions() {
+    public List<Institution> getAllInstitutionsWithDetails() {
         List<Institution> institutions = institutionRepository.findAll();
-        institutions.forEach(institution -> institution.getTables().size());
+        institutions.forEach(institution -> {
+            // Вибирайте дані про столики та фотографії для кожного закладу окремо
+            institution.setTables(institutionService.getTablesByInstitution(institution.getId()));
+            institution.setPhotos(photoService.getPhotosByInstitution(institution.getId()));
+        });
         return institutions;
     }
-
 
 
     @GetMapping("/{id}")

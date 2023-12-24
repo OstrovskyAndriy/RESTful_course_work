@@ -1,6 +1,7 @@
 package com.coursework.services;
 
 import com.coursework.models.Institution;
+import com.coursework.models.InstitutionTables;
 
 import java.util.List;
 
@@ -14,4 +15,6 @@ public interface InstitutionService {
     Institution updateInstitution(Long id, Institution institution);
 
     void deleteInstitution(Long id);
+
+    List<InstitutionTables> getTablesByInstitution(Long id);
 }

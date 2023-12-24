@@ -46,4 +46,8 @@ public class InstitutionTablesServiceImpl implements InstitutionTablesService {
     public void deleteTable(Long id) {
         institutionTablesRepository.deleteById(id);
     }
+
+    public List<InstitutionTables> getTablesByInstitution(Long institutionId) {
+        return institutionTablesRepository.findByInstitutionId(institutionId);
+    }
 }
