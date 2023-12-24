@@ -47,24 +47,34 @@ VALUES ('Назва закладу', 'Адреса', 'Телефон', 'Пошт
 
 
 CREATE TABLE IF NOT EXISTS institution_tables (
-                                                  id BIGINT PRIMARY KEY,
+                                                  id bigserial PRIMARY KEY,
                                                   table_number INT UNIQUE,
                                                   count_of_chairs INT NOT NULL,
                                                   institution_id BIGINT REFERENCES institutions(id) NOT NULL
     );
+INSERT INTO institution_tables (table_number, count_of_chairs, institution_id)
+VALUES (101, 4, 1);
+
+
 
 
 CREATE TABLE IF NOT EXISTS photos (
-                                      id BIGINT PRIMARY KEY,
+                                      id bigserial PRIMARY KEY,
                                       institution_id BIGINT REFERENCES institutions(id),
     url VARCHAR(255) UNIQUE NOT NULL
     );
+INSERT INTO photos ( institution_id, url)
+VALUES (1, 'http://example.com/photo3.jpg');
+
+
 
 CREATE TABLE IF NOT EXISTS reservations (
-                                            id BIGINT PRIMARY KEY,
+                                            id bigserial PRIMARY KEY,
                                             user_id BIGINT REFERENCES users(id) NOT NULL,
     institution_id BIGINT REFERENCES institutions(id) NOT NULL,
     table_id BIGINT REFERENCES institution_tables(id) NOT NULL,
     start_time TIMESTAMP NOT NULL,
     end_time TIMESTAMP NOT NULL
     );
+INSERT INTO reservations (user_id, institution_id, table_id, start_time, end_time)
+VALUES (1, 1, 1, '2023-12-26 20:00:00', '2023-12-26 22:00:00');

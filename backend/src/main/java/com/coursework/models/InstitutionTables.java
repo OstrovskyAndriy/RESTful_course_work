@@ -24,4 +24,3 @@ public class InstitutionTables {
     private Institution institution;
 }
 
-
