@@ -1,5 +1,6 @@
 package com.coursework.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
@@ -21,7 +22,7 @@ public class Photo {
 //    @ManyToOne
 //    @JoinColumn(name = "institution_id", nullable = false)
 //    private Institution institution;
-@JsonIgnore
+@JsonBackReference
 @ManyToOne
 @JoinColumn(name = "institution_id")
 private Institution institution;

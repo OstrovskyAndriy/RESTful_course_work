@@ -41,13 +41,11 @@ public class Institution {
     private String description;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<InstitutionTables> tables;
 
-
-
     @JsonManagedReference
-    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Photo> photos;
 
     @Override
