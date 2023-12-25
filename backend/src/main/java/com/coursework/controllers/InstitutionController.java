@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RestController
@@ -65,11 +66,19 @@ public class InstitutionController {
         return responses;
     }
 
-
     @GetMapping("/{id}")
-    public Institution getInstitutionById(@PathVariable Long id) {
-        return institutionService.getInstitutionById(id);
+    public InstitutionResponse getInstitutionById(@PathVariable Long id) {
+        Optional<Institution> institution = institutionRepository.findById(id);
+
+        if (institution.isPresent()) {
+            return createInstitutionResponse(institution.get());
+        } else {
+            // Можливо, ви захочете обробити ситуацію, коли заклад не знайдено
+            // Наприклад, кинути виняток або повернути спеціальний об'єкт, який вказує на відсутність
+            return null; // Це тимчасовий варіант, вам слід обробити це відповідно до ваших потреб
+        }
     }
+
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
     public Institution createInstitution(@RequestBody Institution institution) {
@@ -86,5 +95,28 @@ public class InstitutionController {
     @DeleteMapping("/{id}")
     public void deleteInstitution(@PathVariable Long id) {
         institutionService.deleteInstitution(id);
+    }
+
+
+    private InstitutionResponse createInstitutionResponse(Institution institution) {
+        List<InstitutionTablesResponse> tables = institution.getTables().stream()
+                .map(table -> new InstitutionTablesResponse(table.getId(), table.getTableNumber(), table.getCountOfChairs(), table.getInstitution().getId()))
+                .collect(Collectors.toList());
+
+        List<PhotoResponse> photos = institution.getPhotos().stream()
+                .map(photo -> new PhotoResponse(photo.getId(), photo.getInstitution().getId(), photo.getUrl()))
+                .collect(Collectors.toList());
+
+        return new InstitutionResponse(
+                institution.getId(),
+                institution.getName(),
+                institution.getType(),
+                institution.getAddress(),
+                institution.getPhone(),
+                institution.getMail(),
+                institution.getDescription(),
+                tables,
+                photos
+        );
     }
 }

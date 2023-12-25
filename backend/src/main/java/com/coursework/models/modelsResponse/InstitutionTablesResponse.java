@@ -17,6 +17,5 @@ public class InstitutionTablesResponse {
         this.countOfChairs = countOfChairs;
         this.institutionId = institutionId;
     }
-
-
 }
+
