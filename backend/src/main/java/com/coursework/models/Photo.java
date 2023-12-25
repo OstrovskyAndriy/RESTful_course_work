@@ -1,6 +1,7 @@
 package com.coursework.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -17,9 +18,13 @@ public class Photo {
     @Column(name = "id")
     private Long id;
 
-    @ManyToOne
-    @JoinColumn(name = "institution_id", nullable = false)
-    private Institution institution;
+//    @ManyToOne
+//    @JoinColumn(name = "institution_id", nullable = false)
+//    private Institution institution;
+@JsonIgnore
+@ManyToOne
+@JoinColumn(name = "institution_id")
+private Institution institution;
 
     @Column(name = "url", nullable = false)
     private String url;

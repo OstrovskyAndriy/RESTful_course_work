@@ -20,8 +20,15 @@ public class Institution {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id")
     private Long id;
+
     @Column(name = "name")
     private String name;
+
+    @Column(name = "phone")
+    private String phone;
+
+    @Column(name = "mail")
+    private String mail;
 
     @Column(name = "type_id")  // Змінено назву стовпця на type_id
     //@Enumerated(EnumType.ORDINAL)
@@ -33,12 +40,29 @@ public class Institution {
     @Column(name = "description")
     private String description;
 
-    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     @JsonManagedReference
+    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<InstitutionTables> tables;
 
-    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+
+
     @JsonManagedReference
+    @OneToMany(mappedBy = "institution", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Photo> photos;
+
+    @Override
+    public String toString() {
+        return "Institution{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", phone='" + phone + '\'' +
+                ", mail='" + mail + '\'' +
+                ", type=" + type +
+                ", address='" + address + '\'' +
+                ", description='" + description + '\'' +
+                ", tables=" + tables +
+                ", photos=" + photos +
+                '}';
+    }
 
 }

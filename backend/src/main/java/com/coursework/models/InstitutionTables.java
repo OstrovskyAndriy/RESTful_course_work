@@ -1,6 +1,7 @@
 package com.coursework.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -22,8 +23,12 @@ public class InstitutionTables {
     @Column(name = "count_of_chairs", nullable = false)
     private int countOfChairs;
 
-    @ManyToOne
-    @JoinColumn(name = "institution_id")
-    private Institution institution;
+//    @ManyToOne
+//    @JoinColumn(name = "institution_id")
+//    private Institution institution;
+@JsonIgnore
+@ManyToOne
+@JoinColumn(name = "institution_id")
+private Institution institution;
 }
 

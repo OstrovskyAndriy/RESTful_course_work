@@ -36,6 +36,7 @@ public class InstitutionServiceImpl implements InstitutionService {
 
     @Override
     public Institution createInstitution(Institution institution) {
+        System.out.println(institution.toString());
         return institutionRepository.save(institution);
     }
 
