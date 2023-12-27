@@ -7,11 +7,12 @@ import lombok.Setter;
 @Setter
 public class PhotoResponse {
     private Long id;
-    private Long institutionId;
     private String url;
+    private Long institutionId;
 
 
-    public PhotoResponse(Long id, Long institutionId, String url) {
+
+    public PhotoResponse(Long id,  String url,Long institutionId) {
         this.id = id;
         this.institutionId = institutionId;
         this.url = url;

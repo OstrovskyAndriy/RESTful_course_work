@@ -19,13 +19,11 @@ public class Photo {
     @Column(name = "id")
     private Long id;
 
-//    @ManyToOne
-//    @JoinColumn(name = "institution_id", nullable = false)
-//    private Institution institution;
-@JsonBackReference
-@ManyToOne
-@JoinColumn(name = "institution_id")
-private Institution institution;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "institution_id")
+    private Institution institution;
 
     @Column(name = "url", nullable = false)
     private String url;

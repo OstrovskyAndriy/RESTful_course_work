@@ -45,7 +45,7 @@ public class InstitutionController {
                     .collect(Collectors.toList());
 
             List<PhotoResponse> photos = institution.getPhotos().stream()
-                    .map(photo -> new PhotoResponse(photo.getId(), photo.getInstitution().getId(), photo.getUrl()))
+                    .map(photo -> new PhotoResponse(photo.getId(),  photo.getUrl(),photo.getInstitution().getId()))
                     .collect(Collectors.toList());
 
             InstitutionResponse response = new InstitutionResponse(
@@ -104,7 +104,7 @@ public class InstitutionController {
                 .collect(Collectors.toList());
 
         List<PhotoResponse> photos = institution.getPhotos().stream()
-                .map(photo -> new PhotoResponse(photo.getId(), photo.getInstitution().getId(), photo.getUrl()))
+                .map(photo -> new PhotoResponse(photo.getId(),  photo.getUrl(),photo.getInstitution().getId()))
                 .collect(Collectors.toList());
 
         return new InstitutionResponse(
