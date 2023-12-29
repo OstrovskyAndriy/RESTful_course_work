@@ -40,15 +40,22 @@ public class PhotoController {
 
     }
 
-//    @GetMapping("/institution/{id}")
-//    public List<Photo> getPhotosByInstitution(@PathVariable Long id) {
-//        return photoService.getPhotosByInstitution(id);
-//    }
 
     @GetMapping("/{id}")
-    public Photo getPhotoById(@PathVariable Long id) {
-        return photoService.getPhotoById(id);
+    public PhotoResponse getPhotoById(@PathVariable Long id) {
+        Photo photo = photoService.getPhotoById(id);
+
+        if (photo != null) {
+            return new PhotoResponse(
+                    photo.getId(),
+                    photo.getUrl(),
+                    photo.getInstitution().getId()
+            );
+        } else {
+            return null;
+        }
     }
+
 
     @PostMapping
     public PhotoResponse addPhoto(@RequestBody PhotoResponse request) {
@@ -70,24 +77,32 @@ public class PhotoController {
         );
     }
 
-//
-//        // Збережіть стілець
-//        InstitutionTables savedTable = institutionTablesService.createTable(table);
-//
-//        // Поверніть відповідь, використовуючи клас InstitutionTablesResponse
-//        return new InstitutionTablesResponse(
-//                savedTable.getId(),
-//                savedTable.getTableNumber(),
-//                savedTable.getCountOfChairs(),
-//                savedTable.getInstitution().getId()
-//        );
-//    }
-
-
     @PutMapping("/{id}")
-    public Photo updatePhoto(@PathVariable Long id, @RequestBody Photo photo) {
-        return photoService.updatePhoto(photo, id);
+    public PhotoResponse updatePhoto(@PathVariable Long id, @RequestBody PhotoResponse request) {
+        Photo existingPhoto = photoService.getPhotoById(id);
+
+        if (existingPhoto != null) {
+            Long institutionId = request.getInstitutionId();
+
+            Institution institution = institutionRepository.findById(institutionId)
+                    .orElseThrow(() -> new RuntimeException("Institution with id " + institutionId + " not found"));
+
+            existingPhoto.setUrl(request.getUrl());
+            existingPhoto.setInstitution(institution);
+
+            Photo updatedPhoto = photoService.updatePhoto(existingPhoto, id);
+
+            return new PhotoResponse(
+                    updatedPhoto.getId(),
+                    updatedPhoto.getUrl(),
+                    updatedPhoto.getInstitution().getId()
+            );
+        } else {
+
+            return null;
+        }
     }
+
 
     @DeleteMapping("/{id}")
     public void deletePhoto(@PathVariable Long id) {

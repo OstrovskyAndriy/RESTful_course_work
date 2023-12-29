@@ -40,9 +40,21 @@ public class InstitutionTablesController {
     }
 
     @GetMapping("/{id}")
-    public InstitutionTables getTableById(@PathVariable Long id) {
-        return institutionTablesService.getTableById(id);
+    public InstitutionTablesResponse getTableById(@PathVariable Long id) {
+        InstitutionTables table = institutionTablesService.getTableById(id);
+
+        if (table != null) {
+            return new InstitutionTablesResponse(
+                    table.getId(),
+                    table.getTableNumber(),
+                    table.getCountOfChairs(),
+                    table.getInstitution().getId()
+            );
+        } else {
+            return null;
+        }
     }
+
 
     @PostMapping
     public InstitutionTablesResponse createTable(@RequestBody InstitutionTablesResponse request) {
@@ -73,12 +85,34 @@ public class InstitutionTablesController {
 
 
 
+@PutMapping("/{id}")
+public InstitutionTablesResponse updateTable(@PathVariable Long id, @RequestBody InstitutionTablesResponse request) {
+    InstitutionTables existingTable = institutionTablesService.getTableById(id);
 
+    if (existingTable != null) {
+        Long institutionId = request.getInstitutionId();
 
-    @PutMapping("/{id}")
-    public InstitutionTables updateTable(@PathVariable Long id, @RequestBody InstitutionTables table) {
-        return institutionTablesService.updateTable(id, table);
+        Institution institution = institutionRepository.findById(institutionId)
+                .orElseThrow(() -> new RuntimeException("Institution with id " + institutionId + " not found"));
+
+        existingTable.setTableNumber(request.getTableNumber());
+        existingTable.setCountOfChairs(request.getCountOfChairs());
+        existingTable.setInstitution(institution);
+
+        InstitutionTables updatedTable = institutionTablesService.updateTable(id, existingTable);
+
+        return new InstitutionTablesResponse(
+                updatedTable.getId(),
+                updatedTable.getTableNumber(),
+                updatedTable.getCountOfChairs(),
+                updatedTable.getInstitution().getId()
+        );
+    } else {
+
+        return null;
     }
+}
+
 
     @DeleteMapping("/{id}")
     public void deleteTable(@PathVariable Long id) {
