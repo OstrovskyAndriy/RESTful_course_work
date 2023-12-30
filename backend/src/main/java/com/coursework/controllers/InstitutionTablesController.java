@@ -58,23 +58,20 @@ public class InstitutionTablesController {
 
     @PostMapping
     public InstitutionTablesResponse createTable(@RequestBody InstitutionTablesResponse request) {
-        // Отримайте ідентифікатор закладу з запиту
         Long institutionId = request.getInstitutionId();
 
-        // Переконайтеся, що заклад існує
+        // заклад існує
         Institution institution = institutionRepository.findById(institutionId)
                 .orElseThrow(() -> new RuntimeException("Institution with id " + institutionId + " not found"));
 
-        // Створіть об'єкт InstitutionTables і встановіть посилання на заклад
         InstitutionTables table = new InstitutionTables();
         table.setTableNumber(request.getTableNumber());
         table.setCountOfChairs(request.getCountOfChairs());
         table.setInstitution(institution);
 
-        // Збережіть стілець
+        // Зберегти стілець
         InstitutionTables savedTable = institutionTablesService.createTable(table);
 
-        // Поверніть відповідь, використовуючи клас InstitutionTablesResponse
         return new InstitutionTablesResponse(
                 savedTable.getId(),
                 savedTable.getTableNumber(),
