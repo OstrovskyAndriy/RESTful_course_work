@@ -7,6 +7,9 @@ import com.coursework.repository.InstitutionRepository;
 import com.coursework.repository.InstitutionTablesRepository;
 import com.coursework.services.InstitutionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,7 +18,7 @@ import java.util.List;
 public class InstitutionServiceImpl implements InstitutionService {
 
     private final InstitutionRepository institutionRepository;
-    private InstitutionTablesRepository institutionTablesRepository;
+    private final InstitutionTablesRepository institutionTablesRepository;
 
     @Autowired
     public InstitutionServiceImpl(InstitutionRepository institutionRepository, InstitutionTablesRepository institutionTablesRepository) {
@@ -23,24 +26,26 @@ public class InstitutionServiceImpl implements InstitutionService {
         this.institutionTablesRepository = institutionTablesRepository;
     }
 
-
     @Override
-    public List<Institution> getAllInstitutions() {
-        return institutionRepository.findAll();
-    }
-
-    @Override
+    @Cacheable(value = "institutionsCache", key = "#id")
     public Institution getInstitutionById(Long id) {
         return institutionRepository.findById(id).orElse(null);
     }
 
     @Override
+    @Cacheable("institutionsCache")
+    public List<Institution> getAllInstitutions() {
+        return institutionRepository.findAll();
+    }
+
+    @Override
+    @CachePut(value = "institutionsCache", key = "#result.id")
     public Institution createInstitution(Institution institution) {
-        System.out.println(institution.toString());
         return institutionRepository.save(institution);
     }
 
     @Override
+    @CachePut(value = "institutionsCache", key = "#id")
     public Institution updateInstitution(Long id, Institution institution) {
         if (institutionRepository.existsById(id)) {
             institution.setId(id);
@@ -50,6 +55,7 @@ public class InstitutionServiceImpl implements InstitutionService {
     }
 
     @Override
+    @CacheEvict(value = "institutionsCache", key = "#id")
     public void deleteInstitution(Long id) {
         institutionRepository.deleteById(id);
     }
@@ -58,6 +64,4 @@ public class InstitutionServiceImpl implements InstitutionService {
     public List<InstitutionTables> getTablesByInstitution(Long id) {
         return institutionTablesRepository.findByInstitutionId(id);
     }
-
-
 }

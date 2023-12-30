@@ -5,6 +5,9 @@ import com.coursework.repository.InstitutionTablesRepository;
 import com.coursework.services.InstitutionTablesService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.CachePut;
 
 import java.util.List;
 
@@ -18,22 +21,22 @@ public class InstitutionTablesServiceImpl implements InstitutionTablesService {
         this.institutionTablesRepository = institutionTablesRepository;
     }
 
-    @Override
-    public List<InstitutionTables> getAllTables() {
-        return institutionTablesRepository.findAll();
-    }
-
-    @Override
+    @Cacheable(value = "institutionTablesCache", key = "#id")
     public InstitutionTables getTableById(Long id) {
         return institutionTablesRepository.findById(id).orElse(null);
     }
 
-    @Override
+    @Cacheable(value = "institutionTablesCache")
+    public List<InstitutionTables> getAllTables() {
+        return institutionTablesRepository.findAll();
+    }
+
+    @CachePut(value = "institutionTablesCache", key = "#result.id")
     public InstitutionTables createTable(InstitutionTables table) {
         return institutionTablesRepository.save(table);
     }
 
-    @Override
+    @CachePut(value = "institutionTablesCache", key = "#id")
     public InstitutionTables updateTable(Long id, InstitutionTables table) {
         if (institutionTablesRepository.existsById(id)) {
             table.setId(id);
@@ -42,11 +45,12 @@ public class InstitutionTablesServiceImpl implements InstitutionTablesService {
         return null;
     }
 
-    @Override
+    @CacheEvict(value = "institutionTablesCache", key = "#id")
     public void deleteTable(Long id) {
         institutionTablesRepository.deleteById(id);
     }
 
+    @Cacheable(value = "institutionTablesCache", key = "#institutionId")
     public List<InstitutionTables> getTablesByInstitution(Long institutionId) {
         return institutionTablesRepository.findByInstitutionId(institutionId);
     }

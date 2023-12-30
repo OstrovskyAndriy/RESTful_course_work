@@ -1,4 +1,3 @@
-// InstitutionRepository.java
 package com.coursework.repository;
 
 import com.coursework.models.Institution;
