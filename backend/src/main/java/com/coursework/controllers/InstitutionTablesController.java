@@ -39,6 +39,21 @@ public class InstitutionTablesController {
                 .collect(Collectors.toList());
     }
 
+    @GetMapping("/{institutionId}/tables")
+    public List<InstitutionTablesResponse> getTablesByInstitution(@PathVariable Long institutionId) {
+        List<InstitutionTables> institutionTables = institutionTablesService.getTablesByInstitution(institutionId);
+
+        return institutionTables.stream()
+                .map(table -> new InstitutionTablesResponse(
+                        table.getId(),
+                        table.getTableNumber(),
+                        table.getCountOfChairs(),
+                        institutionId  // Використовуйте ідентифікатор закладу, переданий як шлях
+                ))
+                .collect(Collectors.toList());
+    }
+
+
     @GetMapping("/{id}")
     public InstitutionTablesResponse getTableById(@PathVariable Long id) {
         InstitutionTables table = institutionTablesService.getTableById(id);

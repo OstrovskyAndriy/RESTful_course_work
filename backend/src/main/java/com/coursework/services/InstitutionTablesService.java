@@ -14,4 +14,6 @@ public interface InstitutionTablesService {
     InstitutionTables updateTable(Long id, InstitutionTables table);
 
     void deleteTable(Long id);
+
+    List<InstitutionTables> getTablesByInstitution(Long institutionId);
 }

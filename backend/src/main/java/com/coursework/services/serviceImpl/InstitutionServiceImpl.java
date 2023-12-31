@@ -10,6 +10,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -32,10 +35,17 @@ public class InstitutionServiceImpl implements InstitutionService {
         return institutionRepository.findById(id).orElse(null);
     }
 
+//    @Override
+//    @Cacheable("institutionsCache")
+//    public List<Institution> getAllInstitutions() {
+//        return institutionRepository.findAll();
+//    }
+
     @Override
-    @Cacheable("institutionsCache")
-    public List<Institution> getAllInstitutions() {
-        return institutionRepository.findAll();
+    public List<Institution> getAllInstitutions(int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Institution> institutionPage = institutionRepository.findAll(pageable);
+        return institutionPage.getContent();
     }
 
     @Override

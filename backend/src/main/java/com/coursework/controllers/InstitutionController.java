@@ -9,6 +9,9 @@ import com.coursework.services.InstitutionService;
 import com.coursework.services.PhotoService;
 import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,8 +38,9 @@ public class InstitutionController {
     }
 
     @GetMapping
-    public List<InstitutionResponse> getAllInstitutionsWithDetails() {
-        List<Institution> institutions = institutionRepository.findAll();
+    public List<InstitutionResponse> getAllInstitutions(@PageableDefault(page = 0, size = 10) Pageable pageable) {
+        Page<Institution> institutionPage = institutionRepository.findAll(pageable);
+        List<Institution> institutions = institutionPage.getContent();
         List<InstitutionResponse> responses = new ArrayList<>();
 
         for (Institution institution : institutions) {
@@ -45,7 +49,7 @@ public class InstitutionController {
                     .collect(Collectors.toList());
 
             List<PhotoResponse> photos = institution.getPhotos().stream()
-                    .map(photo -> new PhotoResponse(photo.getId(),  photo.getUrl(),photo.getInstitution().getId()))
+                    .map(photo -> new PhotoResponse(photo.getId(), photo.getUrl(), photo.getInstitution().getId()))
                     .collect(Collectors.toList());
 
             InstitutionResponse response = new InstitutionResponse(
@@ -65,6 +69,7 @@ public class InstitutionController {
 
         return responses;
     }
+
 
     @GetMapping("/{id}")
     public InstitutionResponse getInstitutionById(@PathVariable Long id) {
