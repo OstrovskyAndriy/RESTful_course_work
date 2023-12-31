@@ -1,9 +1,9 @@
 package com.coursework.models;
 
-import com.coursework.enums.InstitutionType;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @Entity
 @Getter
@@ -30,4 +30,15 @@ public class User {
     @Column(name = "status_id")
     private int status;
 
+    public User() {
+    }
+
+    public User(String userName, String password, String mail, String phone, int status) {
+        this.userName = userName;
+        this.password = new BCryptPasswordEncoder().encode(password);
+        this.mail = mail;
+        this.phone = phone;
+        this.status = status;
+        setPassword(password);
+    }
 }

@@ -35,12 +35,6 @@ public class InstitutionServiceImpl implements InstitutionService {
         return institutionRepository.findById(id).orElse(null);
     }
 
-//    @Override
-//    @Cacheable("institutionsCache")
-//    public List<Institution> getAllInstitutions() {
-//        return institutionRepository.findAll();
-//    }
-
     @Override
     public List<Institution> getAllInstitutions(int page, int size) {
         Pageable pageable = PageRequest.of(page, size);

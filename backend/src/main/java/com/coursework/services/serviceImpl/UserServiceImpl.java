@@ -5,6 +5,7 @@ import com.coursework.repository.UserRepository;
 import com.coursework.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
 
@@ -12,10 +13,12 @@ import java.util.List;
 public class UserServiceImpl implements UserService {
 
     private final UserRepository userRepository;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     @Autowired
-    public UserServiceImpl(UserRepository userRepository) {
+    public UserServiceImpl(UserRepository userRepository, BCryptPasswordEncoder passwordEncoder) {
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     @Override
@@ -30,13 +33,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public User createUser(User user) {
+        // Хешування паролю перед збереженням
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         return userRepository.save(user);
     }
+
 
     @Override
     public User updateUser(Long id, User user) {
         if (userRepository.existsById(id)) {
             user.setId(id);
+            // Хешування паролю перед оновленням
+            user.setPassword(passwordEncoder.encode(user.getPassword()));
             return userRepository.save(user);
         }
         return null;
