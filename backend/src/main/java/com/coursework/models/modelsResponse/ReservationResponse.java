@@ -23,5 +23,6 @@ public class ReservationResponse {
         this.startTime = startTime;
         this.endTime = endTime;
     }
+
 }
 

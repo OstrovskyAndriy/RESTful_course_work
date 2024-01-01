@@ -28,7 +28,8 @@ public class PhotoServiceImpl implements PhotoService {
     }
 
     @Cacheable(value = "photosCache", key = "#institutionId")
-    public List<Photo> getPhotosByInstitution(Long institutionId) {
+    @Override
+    public List<Photo> getPhotosByInstitutionId(Long institutionId) {
         return photoRepository.findByInstitutionId(institutionId);
     }
 
@@ -60,4 +61,3 @@ public class PhotoServiceImpl implements PhotoService {
         photoRepository.deleteById(id);
     }
 }
-

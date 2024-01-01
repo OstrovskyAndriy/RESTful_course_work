@@ -56,10 +56,22 @@ public class PhotoController {
         }
     }
 
+    @GetMapping("/byInstitution/{institutionId}")
+    public List<PhotoResponse> getPhotosByInstitutionId(@PathVariable Long institutionId) {
+        List<Photo> institutionPhotos = photoService.getPhotosByInstitutionId(institutionId);
+
+        return institutionPhotos.stream()
+                .map(photo -> new PhotoResponse(
+                        photo.getId(),
+                        photo.getUrl(),
+                        photo.getInstitution().getId()
+                ))
+                .collect(Collectors.toList());
+    }
+
 
     @PostMapping
     public PhotoResponse addPhoto(@RequestBody PhotoResponse request) {
-        //return photoService.addPhoto(photo);
         Long institutionId = request.getInstitutionId();
         Institution institution = institutionRepository.findById(institutionId)
                 .orElseThrow(() -> new RuntimeException("Institution with id " + institutionId + " not found"));

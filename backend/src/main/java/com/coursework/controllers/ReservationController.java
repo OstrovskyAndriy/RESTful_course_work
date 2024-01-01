@@ -1,16 +1,9 @@
 package com.coursework.controllers;
 
-import com.coursework.models.Institution;
-import com.coursework.models.InstitutionTables;
-import com.coursework.models.Reservation;
-import com.coursework.models.User;
-import com.coursework.models.modelsResponse.InstitutionResponse;
-import com.coursework.models.modelsResponse.InstitutionTablesResponse;
+import com.coursework.models.*;
+import com.coursework.models.modelsResponse.PhotoResponse;
 import com.coursework.models.modelsResponse.ReservationResponse;
-import com.coursework.services.InstitutionService;
-import com.coursework.services.InstitutionTablesService;
-import com.coursework.services.ReservationService;
-import com.coursework.services.UserService;
+import com.coursework.services.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,17 +19,21 @@ public class ReservationController {
     private final UserService userService;
     private final InstitutionService institutionService;
     private final InstitutionTablesService institutionTablesService;
+    private final PhotoService photoService;
+
 
     @Autowired
     public ReservationController(
             ReservationService reservationService,
             UserService userService,
             InstitutionService institutionService,
-            InstitutionTablesService institutionTablesService) {
+            InstitutionTablesService institutionTablesService,
+            PhotoService photoService) {
         this.reservationService = reservationService;
         this.userService = userService;
         this.institutionService = institutionService;
         this.institutionTablesService = institutionTablesService;
+        this.photoService = photoService;
     }
 
     @GetMapping
@@ -44,31 +41,14 @@ public class ReservationController {
         List<Reservation> reservations = reservationService.getAllReservations();
 
         return reservations.stream()
-                .map(reservation -> new ReservationResponse(
-                        reservation.getId(),
-                        reservation.getUser().getId(),
-                        reservation.getInstitution().getId(),
-                        reservation.getTable().getId(),
-                        reservation.getStartTime(),
-                        reservation.getEndTime()
-                ))
+                .map(this::mapToReservationResponse)
                 .collect(Collectors.toList());
     }
-
 
     @GetMapping("/{id}")
     public ReservationResponse getReservationById(@PathVariable Long id) {
         Reservation reservation = reservationService.getReservationById(id);
-
-        // Create and return a ReservationDTO with the necessary information
-        return new ReservationResponse(
-                reservation.getId(),
-                reservation.getUser().getId(),
-                reservation.getInstitution().getId(),
-                reservation.getTable().getId(),
-                reservation.getStartTime(),
-                reservation.getEndTime()
-        );
+        return (reservation != null) ? mapToReservationResponse(reservation) : null;
     }
 
 
@@ -98,64 +78,53 @@ public class ReservationController {
 
         try {
             Reservation createdReservation = reservationService.createReservation(reservation);
-
-            ReservationResponse response = new ReservationResponse(
-                    createdReservation.getId(),
-                    createdReservation.getUser().getId(),
-                    createdReservation.getInstitution().getId(),
-                    createdReservation.getTable().getId(),
-                    createdReservation.getStartTime(),
-                    createdReservation.getEndTime()
-            );
-
-            // успішно
-            return response;
+            return mapToReservationResponse(createdReservation);
         } catch (Exception e) {
-            // помикла
             return null;
         }
     }
 
-
     @PutMapping("/{id}")
     public ReservationResponse updateReservation(@PathVariable Long id, @RequestBody ReservationResponse request) {
-            Reservation existingReservation = reservationService.getReservationById(id);
+        Reservation existingReservation = reservationService.getReservationById(id);
 
-            if (existingReservation != null) {
-                Long userId = request.getUserId();
-                Long institutionId = request.getInstitutionId();
-                Long tableId = request.getTableId();
+        if (existingReservation != null) {
+            Long userId = request.getUserId();
+            Long institutionId = request.getInstitutionId();
+            Long tableId = request.getTableId();
 
-                User user = userService.getUserById(userId);
-                Institution institution = institutionService.getInstitutionById(institutionId);
-                InstitutionTables table = institutionTablesService.getTableById(tableId);
+            User user = userService.getUserById(userId);
+            Institution institution = institutionService.getInstitutionById(institutionId);
+            InstitutionTables table = institutionTablesService.getTableById(tableId);
 
-                existingReservation.setUser(user);
-                existingReservation.setInstitution(institution);
-                existingReservation.setTable(table);
-                existingReservation.setStartTime(request.getStartTime());
-                existingReservation.setEndTime(request.getEndTime());
+            existingReservation.setUser(user);
+            existingReservation.setInstitution(institution);
+            existingReservation.setTable(table);
+            existingReservation.setStartTime(request.getStartTime());
+            existingReservation.setEndTime(request.getEndTime());
 
-                Reservation updatedReservation = reservationService.updateReservation(id, existingReservation);
+            Reservation updatedReservation = reservationService.updateReservation(id, existingReservation);
 
-                // Перетворіть оновлене бронювання в ReservationResponse
-                return new ReservationResponse(
-                        updatedReservation.getId(),
-                        updatedReservation.getUser().getId(),
-                        updatedReservation.getInstitution().getId(),
-                        updatedReservation.getTable().getId(),
-                        updatedReservation.getStartTime(),
-                        updatedReservation.getEndTime()
-                );
-            }
-            else {
-                return null;
-            }
+            return mapToReservationResponse(updatedReservation);
+        } else {
+            return null;
+        }
 
     }
 
     @DeleteMapping("/{id}")
     public void deleteReservation(@PathVariable Long id) {
         reservationService.deleteReservation(id);
+    }
+
+    private ReservationResponse mapToReservationResponse(Reservation reservation) {
+        return new ReservationResponse(
+                reservation.getId(),
+                reservation.getUser().getId(),
+                reservation.getInstitution().getId(),
+                reservation.getTable().getId(),
+                reservation.getStartTime(),
+                reservation.getEndTime()
+        );
     }
 }

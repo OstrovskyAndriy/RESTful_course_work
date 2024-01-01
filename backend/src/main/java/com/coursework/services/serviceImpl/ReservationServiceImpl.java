@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.CachePut;
@@ -21,8 +22,9 @@ public class ReservationServiceImpl implements ReservationService {
         this.reservationRepository = reservationRepository;
     }
 
-    @Cacheable(value = "reservationsCache")
+
     @Override
+    @CachePut(value = "reservationsCache", key = "'all'")
     public List<Reservation> getAllReservations() {
         return reservationRepository.findAll();
     }
@@ -33,14 +35,16 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.findById(id).orElse(null);
     }
 
+
+
     @CachePut(value = "reservationsCache", key = "#result.id")
     @Override
     public Reservation createReservation(Reservation reservation) {
         return reservationRepository.save(reservation);
     }
 
-    @CachePut(value = "reservationsCache", key = "#id")
     @Override
+    @CacheEvict(value = "reservationsCache", key = "'all'")
     public Reservation updateReservation(Long id, Reservation reservation) {
         if (reservationRepository.existsById(id)) {
             reservation.setId(id);
