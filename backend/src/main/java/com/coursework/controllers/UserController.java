@@ -30,6 +30,11 @@ public class UserController {
         return userService.getUserById(id);
     }
 
+    @GetMapping("/by-email")
+    public User getUserByEmailAndPassword(@RequestParam String email, @RequestParam String password) {
+        return userService.getUserByEmailAndPassword(email, password);
+    }
+
     @PostMapping
     public User createUser(@RequestBody User user) {
         return userService.createUser(user);

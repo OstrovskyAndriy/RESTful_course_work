@@ -32,6 +32,16 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public User getUserByEmailAndPassword(String email, String password) {
+        User user = userRepository.findByMail(email);
+        if (user != null && passwordEncoder.matches(password, user.getPassword())) {
+            return user;
+        }
+        return null;
+    }
+
+
+    @Override
     public User createUser(User user) {
         // Хешування паролю перед збереженням
         user.setPassword(passwordEncoder.encode(user.getPassword()));
