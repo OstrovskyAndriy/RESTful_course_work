@@ -35,6 +35,10 @@ public class ReservationServiceImpl implements ReservationService {
         return reservationRepository.findById(id).orElse(null);
     }
 
+    @Override
+    public List<Reservation> getReservationsByUserId(Long userId) {
+        return reservationRepository.findByUserId(userId);
+    }
 
 
     @CachePut(value = "reservationsCache", key = "#result.id")

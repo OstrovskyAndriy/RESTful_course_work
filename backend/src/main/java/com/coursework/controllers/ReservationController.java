@@ -51,6 +51,15 @@ public class ReservationController {
         return (reservation != null) ? mapToReservationResponse(reservation) : null;
     }
 
+    @GetMapping("/by-user/{userId}")
+    public List<ReservationResponse> getReservationsByUserId(@PathVariable Long userId) {
+        List<Reservation> reservations = reservationService.getReservationsByUserId(userId);
+        return reservations.stream()
+                .map(this::mapToReservationResponse)
+                .collect(Collectors.toList());
+    }
+
+
 
     @PostMapping
     public ReservationResponse createReservation(@RequestBody ReservationResponse request) {

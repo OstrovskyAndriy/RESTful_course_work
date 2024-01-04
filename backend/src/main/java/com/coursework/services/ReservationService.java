@@ -9,6 +9,9 @@ public interface ReservationService {
 
     Reservation getReservationById(Long id);
 
+    List<Reservation> getReservationsByUserId(Long userId);
+
+
     Reservation createReservation(Reservation reservation);
 
     Reservation updateReservation(Long id, Reservation reservation);
